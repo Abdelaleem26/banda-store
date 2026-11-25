@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banda | باندا — أزياء عصرية بخامات طبيعية</title>
+
+  <!-- Google Fonts: Alexandria (Headings) + Cairo (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN with Custom Editorial Theme -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            linen: '#FAF8F5',
+            stoneSoft: '#F3EFEA',
+            stoneBorder: '#E6DFD5',
+            ink: '#1C1917',
+            inkMuted: '#57534E',
+            terracotta: {
+              DEFAULT: '#B45309',
+              dark: '#92400E',
+              light: '#FEF3C7'
+            },
+            olive: {
+              DEFAULT: '#3F4E3A',
+              light: '#EEF2EC'
+            }
+          },
+          fontFamily: {
+            display: ['Alexandria', 'sans-serif'],
+            sans: ['Cairo', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    [x-cloak] { display: none !important; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #FAF8F5;
+      color: #1C1917;
+      font-family: 'Cairo', sans-serif;
+    }
+    h1, h2, h3, .font-display { font-family: 'Alexandria', sans-serif; }
+    .crossed-out {
+      position: relative;
+      overflow: hidden;
+    }
+    .crossed-out::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top left, transparent 47%, rgba(120, 113, 108, 0.55) 49%, rgba(120, 113, 108, 0.55) 51%, transparent 53%);
+      pointer-events: none;
+    }
+  </style>
+
+  <!-- App Data & Logic -->
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body x-data="bandaStore" class="antialiased selection:bg-terracotta selection:text-white">
+
+  <!-- Toast Notification -->
+  <div x-show="toast.show" x-cloak
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0 translate-y-3"
+       x-transition:enter-end="opacity-100 translate-y-0"
+       x-transition:leave="transition ease-in duration-150"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed bottom-5 left-5 z-50 bg-ink text-linen px-4 py-3 rounded-xl shadow-xl border border-stone-700 flex items-center gap-2.5 text-sm font-medium">
+    <span class="w-2 h-2 rounded-full bg-terracotta inline-block"></span>
+    <span x-text="toast.text"></span>
+  </div>
+
+  <!-- Top Olive Announcement Bar -->
+  <div class="bg-olive text-linen text-xs sm:text-sm py-2 px-4 text-center font-medium tracking-wide">
+    <span>شحن لكل محافظات مصر خلال ٢–٤ أيام</span>
+    <span class="mx-2 opacity-50">•</span>
+    <span>شحن مجاني للطلبات فوق ٢,٥٠٠ ج.م</span>
+    <span class="mx-2 opacity-50 hidden sm:inline">•</span>
+    <span class="hidden sm:inline">دفع عند الاستلام أو فودافون كاش / إنستاباي</span>
+  </div>
+
+  <!-- Sticky Header -->
+  <header class="sticky top-0 z-40 bg-linen/95 backdrop-blur-md border-b border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+
+      <!-- Mobile Menu Button + Logo -->
+      <div class="flex items-center gap-3">
+        <button @click="mobileMenuOpen = !mobileMenuOpen" class="lg:hidden p-2 rounded-lg text-ink hover:bg-stoneSoft" aria-label="القائمة">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+        <a href="#" class="flex items-center gap-2.5 group">
+          <img src="assets/images/logo-banda-tight.jpg" alt="Banda Logo"
+               class="h-10 sm:h-12 w-auto object-contain mix-blend-multiply transition-transform group-hover:scale-105" />
+          <span class="hidden sm:inline-block text-[11px] font-semibold text-inkMuted border-r border-stoneBorder pr-2.5">
+            أزياء معاصرة
+          </span>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-semibold text-ink">
+        <a href="#new-arrivals" class="hover:text-terracotta transition-colors">وصل حديثاً</a>
+        <a href="#categories" class="hover:text-terracotta transition-colors">الأقسام</a>
+        <a href="#catalog" class="hover:text-terracotta transition-colors">الكتالوج الكامل</a>
+        <button @click="openTracking()" class="hover:text-terracotta transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-olive" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+          </svg>
+          <span>تتبع طلبك</span>
+        </button>
+      </nav>
+
+      <!-- Search + Actions -->
+      <div class="flex items-center gap-2.5">
+        <div class="hidden md:flex items-center bg-stoneSoft border border-stoneBorder rounded-full px-3.5 py-1.5 w-56 focus-within:border-terracotta transition-colors">
+          <svg class="w-4 h-4 text-inkMuted ml-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+          </svg>
+          <input type="text" x-model="filters.q" @keydown.enter="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})"
+                 placeholder="ابحث بالاسم أو الكود..."
+                 class="bg-transparent text-xs w-full focus:outline-none text-ink placeholder:text-inkMuted" />
+        </div>
+
+        <button @click="openTracking()" class="lg:hidden text-xs font-semibold px-3 py-2 rounded-full bg-stoneSoft text-ink">
+          تتبع طلبك
+        </button>
+
+        <button @click="cartOpen = true"
+                class="relative flex items-center gap-2 bg-ink hover:bg-stone-800 text-linen px-4 py-2 rounded-full text-sm font-semibold transition-all shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          <span class="hidden sm:inline">السلة</span>
+          <span x-show="cartCount > 0" x-text="cartCount"
+                class="bg-terracotta text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Nav -->
+    <div x-show="mobileMenuOpen" x-cloak @click.away="mobileMenuOpen = false"
+         class="lg:hidden border-t border-stoneBorder bg-linen px-4 py-4 space-y-3 text-sm font-semibold">
+      <div class="flex items-center bg-stoneSoft border border-stoneBorder rounded-xl px-3 py-2">
+        <input type="text" x-model="filters.q" placeholder="ابحث باسم الموديل أو الكود..."
+               class="bg-transparent text-xs w-full focus:outline-none" />
+      </div>
+      <a @click="mobileMenuOpen = false" href="#new-arrivals" class="block py-1">وصل حديثاً</a>
+      <a @click="mobileMenuOpen = false" href="#categories" class="block py-1">الأقسام</a>
+      <a @click="mobileMenuOpen = false" href="#catalog" class="block py-1">الكتالوج الكامل</a>
+      <button @click="mobileMenuOpen = false; openTracking()" class="block py-1 text-olive">تتبع حالة طلبك</button>
+    </div>
+  </header>
+
+  <!-- 1. Editorial Hero Section -->
+  <section class="relative overflow-hidden bg-stoneSoft">
+    <div class="max-w-7xl mx-auto">
+      <div class="relative min-h-[470px] sm:min-h-[560px] lg:min-h-[600px] flex items-center">
+        <!-- Background Lifestyle Photo -->
+        <img src="assets/images/hero-banner.jpg" alt="تشكيلة باندا الجديدة"
+             class="absolute inset-0 w-full h-full object-cover object-left sm:object-center" />
+        <!-- Warm RTL Editorial Gradient for high text readability -->
+        <div class="absolute inset-0 bg-gradient-to-l from-linen/95 via-linen/80 sm:via-linen/65 to-transparent"></div>
+
+        <!-- Hero Content on the Right (RTL) -->
+        <div class="relative z-10 max-w-xl px-6 sm:px-10 lg:px-14 py-14">
+          <span class="inline-flex items-center gap-2 bg-olive-light text-olive border border-olive/20 px-3.5 py-1 rounded-full text-xs font-bold mb-5">
+            <span class="w-1.5 h-1.5 rounded-full bg-olive"></span>
+            كوليكشن الخريف والشتاء — وصل حديثاً
+          </span>
+
+          <h1 class="font-display text-3xl sm:text-5xl font-extrabold text-ink leading-[1.2] mb-4">
+            أناقة مصرية هادئة..
+            <span class="text-terracotta block mt-1">تتفصّل على يومك</span>
+          </h1>
+
+          <p class="text-sm sm:text-base text-inkMuted leading-relaxed mb-8 max-w-md">
+            أكتر من ٣٠٠ موديل بخامات قطنية وكتان طبيعي، متوفرة بمقاسات وألوان محدثة لحظياً حسب المخزون الفعلي — اطلب أونلاين والدفع عند الاستلام أو بالمحفظة.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-3.5">
+            <a href="#catalog"
+               class="bg-terracotta hover:bg-terracotta-dark text-white px-7 py-3.5 rounded-full text-sm font-bold shadow-md shadow-terracotta/20 transition-all flex items-center gap-2">
+              <span>تسوق الكتالوج</span>
+              <svg class="w-4 h-4 rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+              </svg>
+            </a>
+            <a href="#new-arrivals"
+               class="bg-linen/90 hover:bg-white text-ink border border-stoneBorder px-6 py-3.5 rounded-full text-sm font-bold transition-all">
+              وصل حديثاً
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Trust Strip -->
+  <section class="border-y border-stoneBorder bg-linen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-stoneSoft flex items-center justify-center text-terracotta shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs sm:text-sm font-bold text-ink">دفع مرن وآمن</p>
+          <p class="text-[11px] sm:text-xs text-inkMuted">كاش عند الاستلام أو فودافون كاش وإنستاباي</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-stoneSoft flex items-center justify-center text-olive shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs sm:text-sm font-bold text-ink">مخزون حقيقي لحظي</p>
+          <p class="text-[11px] sm:text-xs text-inkMuted">المقاس واللون الظاهر متاح للشحن فوراً</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-stoneSoft flex items-center justify-center text-terracotta shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs sm:text-sm font-bold text-ink">استبدال واسترجاع ١٤ يوم</p>
+          <p class="text-[11px] sm:text-xs text-inkMuted">مقاسك مش مظبوط؟ بنبدله لك بسهولة</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-stoneSoft flex items-center justify-center text-olive shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs sm:text-sm font-bold text-ink">شحن لكل المحافظات</p>
+          <p class="text-[11px] sm:text-xs text-inkMuted">تسعير واضح داخل السلة قبل التأكيد</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Categories Showcase -->
+  <section id="categories" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <div class="flex items-end justify-between mb-7">
+      <div>
+        <span class="text-xs font-bold text-terracotta tracking-wider">تصفح حسب الستايل</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-1">أقسام متجر باندا</h2>
+      </div>
+      <a href="#catalog" @click="clearFilters()" class="text-xs sm:text-sm font-bold text-ink hover:text-terracotta underline underline-offset-4">
+        عرض كل الموديلات
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <template x-for="cat in categories" :key="cat.id">
+        <button @click="selectCategoryFromHome(cat.id)"
+                class="group text-right relative rounded-2xl overflow-hidden aspect-[3/4] bg-stoneSoft shadow-sm border border-stoneBorder">
+          <img :src="cat.image" :alt="cat.name"
+               class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent"></div>
+          <div class="absolute bottom-0 inset-x-0 p-4 sm:p-5 text-linen">
+            <h3 class="font-display text-base sm:text-lg font-bold" x-text="cat.name"></h3>
+            <p class="text-[11px] sm:text-xs text-stone-300 mt-0.5" x-text="cat.subtitle"></p>
+          </div>
+        </button>
+      </template>
+    </div>
+  </section>
+
+  <!-- 4. New Arrivals Strip -->
+  <section id="new-arrivals" class="bg-stoneSoft/70 border-y border-stoneBorder py-12 sm:py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between mb-7">
+        <div>
+          <span class="text-xs font-bold text-olive">إصدارات هذا الأسبوع</span>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-1">وصل حديثاً</h2>
+        </div>
+        <a href="#catalog" class="text-xs sm:text-sm font-bold text-terracotta hover:underline">استكشف المزيد &larr;</a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+        <template x-for="product in products.filter(p => p.isNew).slice(0, 4)" :key="'new-' + product.id">
+          <div class="bg-linen rounded-2xl border border-stoneBorder overflow-hidden group flex flex-col">
+            <div class="relative aspect-[3/4] bg-stoneSoft overflow-hidden cursor-pointer" @click="openQuickView(product)">
+              <img :src="cardImage(product)" :alt="product.name"
+                   class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+
+              <!-- Badges -->
+              <div class="absolute top-3 right-3 flex flex-col gap-1.5">
+                <span x-show="discountPercent(product) > 0"
+                      class="bg-terracotta text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full"
+                      x-text="'خصم ' + discountPercent(product) + '%'"></span>
+                <span x-show="lowStockMessage(product)"
+                      class="bg-ink/90 text-linen text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
+                      x-text="lowStockMessage(product)"></span>
+              </div>
+
+              <button @click.stop="openQuickView(product)"
+                      class="absolute bottom-3 inset-x-3 bg-linen/95 hover:bg-terracotta hover:text-white text-ink text-xs font-bold py-2.5 rounded-xl shadow-sm opacity-95 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                اختر المقاس واللون
+              </button>
+            </div>
+
+            <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-[11px] text-inkMuted mb-1">
+                  <span x-text="product.categoryName"></span>
+                  <span x-text="product.modelCode"></span>
+                </div>
+                <h3 @click="openQuickView(product)" class="font-display text-sm font-bold text-ink cursor-pointer hover:text-terracotta line-clamp-2" x-text="product.name"></h3>
+              </div>
+
+              <div class="mt-3 pt-2.5 border-t border-stoneBorder/70 flex items-center justify-between gap-2">
+                <!-- Color Swatches -->
+                <div class="flex items-center gap-1.5">
+                  <template x-for="col in productColors(product)" :key="col.id">
+                    <button @click="cardColors[product.id] = col.id"
+                            :title="col.name + (col.totalStock === 0 ? ' (نفذ)' : '')"
+                            :class="[
+                              cardColors[product.id] === col.id ? 'ring-2 ring-ink ring-offset-2 ring-offset-linen' : 'border border-stone-300',
+                              col.totalStock === 0 ? 'opacity-35 crossed-out' : ''
+                            ]"
+                            :style="`background-color: ${col.hex}`"
+                            class="w-4 h-4 rounded-full transition-all"></button>
+                  </template>
+                </div>
+
+                <!-- Price -->
+                <div class="text-left">
+                  <span class="font-display text-sm sm:text-base font-bold text-terracotta" x-text="formatPrice(effectivePrice(product))"></span>
+                  <span x-show="product.salePrice" class="block text-[11px] text-inkMuted line-through" x-text="formatPrice(product.basePrice)"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Full Filterable Catalog -->
+  <section id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <span class="text-xs font-bold text-terracotta">مخزون محدث لحظياً لكل مقاس ولون</span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold text-ink mt-1">كتالوج باندا</h2>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="text-xs text-inkMuted font-semibold">
+          عرض <span class="text-ink font-bold" x-text="filteredProducts.length"></span> موديل
+        </span>
+        <select x-model="filters.sort"
+                class="bg-stoneSoft border border-stoneBorder rounded-xl px-3.5 py-2 text-xs font-semibold text-ink focus:outline-none focus:border-terracotta">
+          <option value="featured">الأكثر تميزاً</option>
+          <option value="new">الأحدث أولاً</option>
+          <option value="price_asc">السعر: من الأقل للأعلى</option>
+          <option value="price_desc">السعر: من الأعلى للأقل</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Filters Sidebar -->
+      <aside class="lg:col-span-3 space-y-6 bg-stoneSoft/70 border border-stoneBorder rounded-2xl p-5 h-fit">
+        <div class="flex items-center justify-between border-b border-stoneBorder pb-3">
+          <h3 class="font-display text-sm font-bold text-ink">تصفية النتائج</h3>
+          <button @click="clearFilters()" class="text-xs font-semibold text-terracotta hover:underline">إعادة ضبط</button>
+        </div>
+
+        <!-- Search inside filters -->
+        <div>
+          <label class="block text-xs font-bold text-ink mb-2">بحث سريع</label>
+          <input type="text" x-model="filters.q" placeholder="اسم القطعة أو BND-101..."
+                 class="w-full bg-linen border border-stoneBorder rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-terracotta" />
+        </div>
+
+        <!-- Category Filter -->
+        <div>
+          <label class="block text-xs font-bold text-ink mb-2">القسم</label>
+          <div class="space-y-1.5 text-xs">
+            <button @click="filters.category = 'all'"
+                    :class="filters.category === 'all' ? 'bg-ink text-linen font-bold' : 'bg-linen text-ink hover:bg-white'"
+                    class="w-full text-right px-3 py-2 rounded-xl border border-stoneBorder transition-colors">
+              كل الأقسام
+            </button>
+            <template x-for="cat in categories" :key="'flt-' + cat.id">
+              <button @click="filters.category = cat.id"
+                      :class="filters.category === cat.id ? 'bg-ink text-linen font-bold' : 'bg-linen text-ink hover:bg-white'"
+                      class="w-full text-right px-3 py-2 rounded-xl border border-stoneBorder transition-colors"
+                      x-text="cat.name"></button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Size Filter -->
+        <div>
+          <label class="block text-xs font-bold text-ink mb-2">المقاس المتاح</label>
+          <div class="flex flex-wrap gap-2">
+            <button @click="filters.size = 'all'"
+                    :class="filters.size === 'all' ? 'bg-terracotta text-white border-terracotta' : 'bg-linen text-ink border-stoneBorder'"
+                    class="px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors">الكل</button>
+            <template x-for="sz in sizes" :key="'fsz-' + sz">
+              <button @click="filters.size = sz"
+                      :class="filters.size === sz ? 'bg-terracotta text-white border-terracotta' : 'bg-linen text-ink border-stoneBorder hover:border-ink'"
+                      class="px-3 py-1.5 rounded-lg border text-xs font-bold transition-colors"
+                      x-text="sz"></button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Color Filter -->
+        <div>
+          <label class="block text-xs font-bold text-ink mb-2">اللون</label>
+          <div class="flex flex-wrap gap-2.5">
+            <button @click="filters.color = 'all'"
+                    :class="filters.color === 'all' ? 'bg-ink text-linen' : 'bg-linen text-ink border border-stoneBorder'"
+                    class="px-2.5 py-1 rounded-full text-[11px] font-bold">الكل</button>
+            <template x-for="col in colors" :key="'fcol-' + col.id">
+              <button @click="filters.color = col.id"
+                      :title="col.name"
+                      :class="filters.color === col.id ? 'ring-2 ring-terracotta ring-offset-2 ring-offset-stoneSoft' : 'border border-stone-300'"
+                      :style="`background-color: ${col.hex}`"
+                      class="w-6 h-6 rounded-full transition-all"></button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Price Range -->
+        <div>
+          <div class="flex items-center justify-between text-xs mb-2">
+            <span class="font-bold text-ink">الحد الأقصى للسعر</span>
+            <span class="font-bold text-terracotta" x-text="formatPrice(filters.maxPrice)"></span>
+          </div>
+          <input type="range" min="800" max="3000" step="100" x-model.number="filters.maxPrice"
+                 class="w-full accent-terracotta cursor-pointer" />
+        </div>
+
+        <!-- In-Stock Only -->
+        <label class="flex items-center gap-2.5 cursor-pointer pt-2 border-t border-stoneBorder text-xs font-semibold text-ink">
+          <input type="checkbox" x-model="filters.inStockOnly" class="w-4 h-4 accent-olive rounded" />
+          <span>إظهار المتاح في المخزن فقط</span>
+        </label>
+      </aside>
+
+      <!-- Products Grid -->
+      <div class="lg:col-span-9">
+        <template x-if="filteredProducts.length === 0">
+          <div class="bg-stoneSoft rounded-2xl border border-stoneBorder p-12 text-center">
+            <p class="font-display text-lg font-bold text-ink mb-2">لا توجد موديلات مطابقة لهذه الفلاتر</p>
+            <p class="text-sm text-inkMuted mb-5">جرّب تغيير المقاس أو توسيع نطاق السعر.</p>
+            <button @click="clearFilters()" class="bg-terracotta text-white px-6 py-2.5 rounded-full text-xs font-bold">
+              عرض كل الموديلات
+            </button>
+          </div>
+        </template>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <template x-for="product in filteredProducts" :key="'cat-' + product.id">
+            <div class="bg-white rounded-2xl border border-stoneBorder overflow-hidden group flex flex-col shadow-sm hover:shadow-md transition-shadow">
+              <div class="relative aspect-[3/4] bg-stoneSoft overflow-hidden cursor-pointer" @click="openQuickView(product)">
+                <img :src="cardImage(product)" :alt="product.name"
+                     class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
+
+                <div class="absolute top-3 right-3 flex flex-col gap-1.5">
+                  <span x-show="discountPercent(product) > 0"
+                        class="bg-terracotta text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full"
+                        x-text="'-' + discountPercent(product) + '%'"></span>
+                  <span x-show="lowStockMessage(product)"
+                        class="bg-ink/90 text-linen text-[10px] font-semibold px-2.5 py-0.5 rounded-full"
+                        x-text="lowStockMessage(product)"></span>
+                  <span x-show="productTotalStock(product) === 0"
+                        class="bg-red-700 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">نفذت الكمية</span>
+                </div>
+
+                <button @click.stop="openQuickView(product)"
+                        class="absolute bottom-3 inset-x-3 bg-linen/95 hover:bg-terracotta hover:text-white text-ink text-xs font-bold py-2.5 rounded-xl shadow-sm opacity-95 sm:opacity-0 sm:group-hover:opacity-100 transition-all">
+                  معاينة واختيار المقاس
+                </button>
+              </div>
+
+              <div class="p-3.5 sm:p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-[11px] text-inkMuted mb-1">
+                    <span x-text="product.categoryName"></span>
+                    <span x-text="product.modelCode"></span>
+                  </div>
+                  <h3 @click="openQuickView(product)" class="font-display text-sm font-bold text-ink cursor-pointer hover:text-terracotta leading-snug" x-text="product.name"></h3>
+                </div>
+
+                <div class="mt-3 pt-2.5 border-t border-stoneBorder/60 flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <template x-for="col in productColors(product)" :key="col.id">
+                      <button @click="cardColors[product.id] = col.id"
+                              :title="col.name + (col.totalStock === 0 ? ' (نفذ)' : '')"
+                              :class="[
+                                cardColors[product.id] === col.id ? 'ring-2 ring-ink ring-offset-2 ring-offset-white' : 'border border-stone-300',
+                                col.totalStock === 0 ? 'opacity-35 crossed-out' : ''
+                              ]"
+                              :style="`background-color: ${col.hex}`"
+                              class="w-4 h-4 rounded-full"></button>
+                    </template>
+                  </div>
+
+                  <div class="text-left">
+                    <span class="font-display text-sm sm:text-base font-bold text-terracotta" x-text="formatPrice(effectivePrice(product))"></span>
+                    <span x-show="product.salePrice" class="block text-[11px] text-inkMuted line-through" x-text="formatPrice(product.basePrice)"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Editorial Single Promo Banner -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+    <div class="bg-ink text-linen rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-12 items-center">
+      <div class="md:col-span-7 p-8 sm:p-12">
+        <span class="inline-block bg-terracotta/20 text-amber-300 border border-terracotta/40 text-xs font-bold px-3 py-1 rounded-full mb-4">
+          عرض التوفير من باندا
+        </span>
+        <h2 class="font-display text-2xl sm:text-3xl font-bold leading-snug mb-3">
+          شحن مجاني لأي مكان في مصر على الطلبات فوق ٢,٥٠٠ ج.م
+        </h2>
+        <p class="text-stone-300 text-sm mb-6 max-w-lg">
+          اطلب طقمين أو أكثر ووفّر مصاريف الشحن بالكامل، مع إمكانية المعاينة قبل الاستلام والاستبدال خلال ١٤ يوم.
+        </p>
+        <a href="#catalog" class="inline-flex bg-terracotta hover:bg-terracotta-dark text-white px-7 py-3 rounded-full text-sm font-bold transition-colors">
+          كمّل إطلالتك الآن
+        </a>
+      </div>
+      <div class="md:col-span-5 h-64 md:h-full">
+        <img src="assets/images/womens-blazer.jpg" alt="عرض باندا" class="w-full h-full object-cover object-top" />
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Footer (Strictly Zero Admin Links) -->
+  <footer class="bg-stoneSoft border-t border-stoneBorder">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        <img src="assets/images/logo-banda-tight.jpg" alt="Banda" class="h-11 w-auto mix-blend-multiply mb-3" />
+        <p class="text-xs text-inkMuted leading-relaxed">
+          متجر باندا للملابس العصرية في مصر. خامات مختارة بعناية، مقاسات دقيقة، ومخزون متجدد يومياً.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-display text-sm font-bold text-ink mb-3">روابط سريعة</h4>
+        <ul class="space-y-2 text-xs text-inkMuted">
+          <li><a href="#new-arrivals" class="hover:text-terracotta">وصل حديثاً</a></li>
+          <li><a href="#catalog" class="hover:text-terracotta">الكتالوج الكامل</a></li>
+          <li><button @click="openTracking()" class="hover:text-terracotta">تتبع حالة طلبك</button></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display text-sm font-bold text-ink mb-3">سياسة الخدمة</h4>
+        <ul class="space-y-2 text-xs text-inkMuted">
+          <li>الاستبدال والاسترجاع خلال ١٤ يوماً</li>
+          <li>الدفع عند الاستلام / فودافون كاش / إنستاباي</li>
+          <li>ساعات خدمة العملاء: ١٠ ص – ١٠ م</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display text-sm font-bold text-ink mb-3">تواصل معنا</h4>
+        <p class="text-xs text-inkMuted mb-2">القاهرة — مصر</p>
+        <p class="text-xs text-ink font-semibold mb-3" dir="ltr">+20 100 000 0000</p>
+        <button @click="resetDemoData()" class="text-[11px] text-inkMuted underline hover:text-terracotta">
+          إعادة ضبط المخزون التجريبي للعرض
+        </button>
+      </div>
+    </div>
+    <div class="border-t border-stoneBorder py-4 text-center text-xs text-inkMuted">
+      © ٢٠٢٦ Banda Store — جميع الحقوق محفوظة
+    </div>
+  </footer>
+
+  <!-- ================= MODALS & DRAWERS ================= -->
+
+  <!-- Quick View / Product Details Modal -->
+  <div x-show="quickViewOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/60 backdrop-blur-sm">
+    <div @click.away="quickViewOpen = false"
+         class="bg-linen rounded-3xl max-w-3xl w-full overflow-hidden shadow-2xl border border-stoneBorder grid grid-cols-1 md:grid-cols-12 max-h-[92vh] overflow-y-auto">
+      <template x-if="activeProduct">
+        <div class="contents">
+          <!-- Product Image -->
+          <div class="md:col-span-6 bg-stoneSoft relative min-h-[320px]">
+            <img :src="activeImage" :alt="activeProduct.name" class="w-full h-full object-cover object-top" />
+            <button @click="quickViewOpen = false"
+                    class="md:hidden absolute top-3 left-3 w-9 h-9 rounded-full bg-linen/90 text-ink flex items-center justify-center font-bold shadow">✕</button>
+          </div>
+
+          <!-- Variant Picker -->
+          <div class="md:col-span-6 p-5 sm:p-7 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <span class="text-xs font-bold text-olive bg-olive-light px-2.5 py-0.5 rounded-full" x-text="activeProduct.modelCode"></span>
+                <button @click="quickViewOpen = false" class="hidden md:flex w-8 h-8 rounded-full hover:bg-stoneSoft items-center justify-center text-inkMuted">✕</button>
+              </div>
+
+              <h3 class="font-display text-xl font-bold text-ink leading-snug" x-text="activeProduct.name"></h3>
+
+              <div class="flex items-baseline gap-2.5 mt-2.5">
+                <span class="font-display text-2xl font-extrabold text-terracotta" x-text="formatPrice(effectivePrice(activeProduct))"></span>
+                <span x-show="activeProduct.salePrice" class="text-sm text-inkMuted line-through" x-text="formatPrice(activeProduct.basePrice)"></span>
+              </div>
+
+              <p class="text-xs text-inkMuted leading-relaxed mt-3 pb-4 border-b border-stoneBorder" x-text="activeProduct.fabric"></p>
+
+              <!-- Color Picker -->
+              <div class="mt-4">
+                <div class="flex items-center justify-between text-xs mb-2">
+                  <span class="font-bold text-ink">اللون: <span class="text-terracotta" x-text="colorObj(selectedColor).name"></span></span>
+                </div>
+                <div class="flex flex-wrap gap-2.5">
+                  <template x-for="col in productColors(activeProduct)" :key="'mcol-' + col.id">
+                    <button @click="selectModalColor(col.id)"
+                            :class="[
+                              selectedColor === col.id ? 'ring-2 ring-ink ring-offset-2 ring-offset-linen' : 'border border-stone-300',
+                              col.totalStock === 0 ? 'opacity-40 crossed-out' : ''
+                            ]"
+                            class="flex items-center gap-2 pl-3 pr-1.5 py-1 rounded-full bg-white text-xs font-semibold">
+                      <span :style="`background-color: ${col.hex}`" class="w-4 h-4 rounded-full border border-black/10"></span>
+                      <span x-text="col.name"></span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Size Picker (Disables 0-stock sizes!) -->
+              <div class="mt-5">
+                <div class="flex items-center justify-between text-xs mb-2">
+                  <span class="font-bold text-ink">المقاس:</span>
+                  <template x-if="activeVariant">
+                    <span :class="activeVariant.stock <= 3 && activeVariant.stock > 0 ? 'text-terracotta font-bold' : 'text-olive font-semibold'">
+                      <span x-show="activeVariant.stock === 0" class="text-red-700">نفذ هذا المقاس</span>
+                      <span x-show="activeVariant.stock > 0 && activeVariant.stock <= 3" x-text="'باقي ' + activeVariant.stock + ' قطع فقط!'"></span>
+                      <span x-show="activeVariant.stock > 3" x-text="'متوفر (' + activeVariant.stock + ' قطعة)'"></span>
+                    </span>
+                  </template>
+                </div>
+
+                <div class="grid grid-cols-5 gap-2">
+                  <template x-for="vr in activeColorVariants" :key="vr.id">
+                    <button @click="if (vr.stock > 0) { selectedSize = vr.size; selectedQty = 1; }"
+                            :disabled="vr.stock === 0"
+                            :class="[
+                              vr.stock === 0
+                                ? 'bg-stoneSoft text-stone-400 border-stoneBorder cursor-not-allowed crossed-out'
+                                : (selectedSize === vr.size
+                                    ? 'bg-ink text-linen border-ink font-bold'
+                                    : 'bg-white text-ink border-stoneBorder hover:border-ink')
+                            ]"
+                            class="py-2 rounded-xl border text-xs font-semibold transition-all flex flex-col items-center">
+                      <span x-text="vr.size"></span>
+                      <span x-show="vr.stock === 0" class="text-[9px] text-red-600/80">نفذ</span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Quantity -->
+              <div class="mt-5 flex items-center gap-4" x-show="activeVariant && activeVariant.stock > 0">
+                <span class="text-xs font-bold text-ink">الكمية:</span>
+                <div class="flex items-center border border-stoneBorder rounded-xl bg-white">
+                  <button @click="if (selectedQty > 1) selectedQty--" class="px-3 py-1.5 text-sm font-bold hover:text-terracotta">-</button>
+                  <span class="px-3 text-sm font-bold" x-text="selectedQty"></span>
+                  <button @click="if (activeVariant && selectedQty < activeVariant.stock) selectedQty++" class="px-3 py-1.5 text-sm font-bold hover:text-terracotta">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- CTAs -->
+            <div class="mt-6 pt-4 border-t border-stoneBorder grid grid-cols-2 gap-2.5">
+              <button @click="addToCart(false)"
+                      :disabled="!activeVariant || activeVariant.stock === 0"
+                      class="bg-ink hover:bg-stone-800 disabled:bg-stone-300 text-linen py-3 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+                أضف للسلة
+              </button>
+              <button @click="addToCart(true)"
+                      :disabled="!activeVariant || activeVariant.stock === 0"
+                      class="bg-terracotta hover:bg-terracotta-dark disabled:bg-stone-300 text-white py-3 rounded-xl text-xs sm:text-sm font-bold transition-colors">
+                اطلب الآن فوراً
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Slide-Over Cart Drawer (with Upfront Shipping Calculator!) -->
+  <div x-show="cartOpen" x-cloak class="fixed inset-0 z-50 flex justify-end bg-ink/50 backdrop-blur-sm">
+    <div @click.away="cartOpen = false"
+         class="bg-linen w-full max-w-md h-full flex flex-col justify-between shadow-2xl border-r border-stoneBorder">
+      <!-- Header -->
+      <div class="p-5 border-b border-stoneBorder flex items-center justify-between">
+        <div>
+          <h3 class="font-display text-lg font-bold text-ink">سلة المشتريات</h3>
+          <p class="text-xs text-inkMuted" x-text="cartCount + ' قطعة مختارة'"></p>
+        </div>
+        <button @click="cartOpen = false" class="w-9 h-9 rounded-full hover:bg-stoneSoft flex items-center justify-center text-inkMuted">✕</button>
+      </div>
+
+      <!-- Items -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-4">
+        <template x-if="cart.length === 0">
+          <div class="text-center py-16">
+            <p class="font-display text-base font-bold text-ink mb-1">السلة فارغة حالياً</p>
+            <p class="text-xs text-inkMuted mb-5">اختر مقاسك ولونك من الكتالوج</p>
+            <button @click="cartOpen = false" class="bg-terracotta text-white px-6 py-2.5 rounded-full text-xs font-bold">
+              تصفح الموديلات
+            </button>
+          </div>
+        </template>
+
+        <template x-for="(item, idx) in cart" :key="item.variantId">
+          <div class="flex gap-3.5 bg-white p-3 rounded-2xl border border-stoneBorder">
+            <img :src="item.image" :alt="item.name" class="w-20 h-24 object-cover object-top rounded-xl bg-stoneSoft shrink-0" />
+            <div class="flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-start justify-between gap-2">
+                  <h4 class="font-display text-xs font-bold text-ink leading-snug" x-text="item.name"></h4>
+                  <button @click="removeCartItem(idx)" class="text-xs text-inkMuted hover:text-red-600">حذف</button>
+                </div>
+                <p class="text-[11px] text-inkMuted mt-1">
+                  اللون: <span class="font-semibold text-ink" x-text="item.colorName"></span> •
+                  المقاس: <span class="font-semibold text-ink" x-text="item.size"></span>
+                </p>
+              </div>
+              <div class="flex items-center justify-between mt-2">
+                <div class="flex items-center border border-stoneBorder rounded-lg bg-linen">
+                  <button @click="updateCartQty(idx, -1)" class="px-2.5 py-0.5 text-xs font-bold">-</button>
+                  <span class="px-2 text-xs font-bold" x-text="item.qty"></span>
+                  <button @click="updateCartQty(idx, 1)" class="px-2.5 py-0.5 text-xs font-bold">+</button>
+                </div>
+                <span class="font-display text-sm font-bold text-terracotta" x-text="formatPrice(item.unitPrice * item.qty)"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Upfront Shipping Calculator + Total -->
+      <div x-show="cart.length > 0" class="p-5 bg-stoneSoft border-t border-stoneBorder space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-ink mb-1.5">احسب الشحن لمحافظتك قبل الطلب:</label>
+          <select x-model.number="selectedZoneId"
+                  class="w-full bg-linen border border-stoneBorder rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none focus:border-terracotta">
+            <template x-for="zone in shippingZones" :key="zone.id">
+              <option :value="zone.id" x-text="zone.name + ' (' + zone.fee + ' ج.م — ' + zone.days + ')'"></option>
+            </template>
+          </select>
+        </div>
+
+        <div class="space-y-1.5 text-xs pt-2">
+          <div class="flex justify-between text-inkMuted">
+            <span>مجموع القطع</span>
+            <span class="font-semibold text-ink" x-text="formatPrice(cartSubtotal)"></span>
+          </div>
+          <div class="flex justify-between text-inkMuted">
+            <span>الشحن (<span x-text="selectedZone.name"></span>)</span>
+            <span x-show="currentShippingFee === 0" class="font-bold text-olive">مجاني!</span>
+            <span x-show="currentShippingFee > 0" class="font-semibold text-ink" x-text="formatPrice(currentShippingFee)"></span>
+          </div>
+          <div class="flex justify-between text-base font-display font-extrabold text-ink pt-2 border-t border-stoneBorder">
+            <span>الإجمالي النهائي</span>
+            <span class="text-terracotta" x-text="formatPrice(cartTotal)"></span>
+          </div>
+        </div>
+
+        <button @click="openCheckout()"
+                class="w-full bg-terracotta hover:bg-terracotta-dark text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors">
+          إتمام الطلب الآن
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fast Guest Checkout Modal -->
+  <div x-show="checkoutOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/60 backdrop-blur-sm">
+    <div @click.away="checkoutOpen = false"
+         class="bg-linen rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-stoneBorder max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between pb-4 border-b border-stoneBorder mb-5">
+        <div>
+          <h3 class="font-display text-xl font-bold text-ink">إتمام الطلب السريع</h3>
+          <p class="text-xs text-inkMuted">بدون تسجيل حساب — خطوة واحدة فقط</p>
+        </div>
+        <button @click="checkoutOpen = false" class="w-9 h-9 rounded-full hover:bg-stoneSoft flex items-center justify-center text-inkMuted">✕</button>
+      </div>
+
+      <div x-show="checkoutError" class="mb-4 bg-red-50 border border-red-200 text-red-800 text-xs font-semibold px-4 py-3 rounded-xl" x-text="checkoutError"></div>
+
+      <form @submit.prevent="submitOrder()" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-ink mb-1">الاسم بالكامل *</label>
+            <input type="text" x-model="checkout.customerName" required placeholder="مثال: أحمد محمد علي"
+                   class="w-full bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-terracotta" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-ink mb-1">رقم الموبايل (مصر) *</label>
+            <input type="tel" x-model="checkout.phone" required placeholder="010xxxxxxxx" dir="ltr"
+                   class="w-full bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-sm text-right focus:outline-none focus:border-terracotta" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-ink mb-1">المحافظة *</label>
+            <select x-model.number="checkout.zoneId" @change="selectedZoneId = checkout.zoneId"
+                    class="w-full bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-terracotta">
+              <template x-for="zone in shippingZones" :key="'ckz-' + zone.id">
+                <option :value="zone.id" x-text="zone.name + ' — ' + zone.fee + ' ج.م'"></option>
+              </template>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-ink mb-1">المدينة / المنطقة *</label>
+            <input type="text" x-model="checkout.city" required placeholder="مثال: مدينة نصر / المعادي"
+                   class="w-full bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-terracotta" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-ink mb-1">العنوان بالتفصيل *</label>
+          <input type="text" x-model="checkout.address" required placeholder="اسم الشارع، رقم العمارة، الدور، علامة مميزة"
+                 class="w-full bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-terracotta" />
+        </div>
+
+        <!-- Payment Method -->
+        <div>
+          <label class="block text-xs font-bold text-ink mb-2">طريقة الدفع *</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <label :class="checkout.paymentMethod === 'cod' ? 'border-terracotta bg-amber-50/40' : 'border-stoneBorder bg-white'"
+                   class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer">
+              <input type="radio" value="cod" x-model="checkout.paymentMethod" class="accent-terracotta" />
+              <div>
+                <p class="text-xs font-bold text-ink">الدفع عند الاستلام (كاش)</p>
+                <p class="text-[11px] text-inkMuted">ادفع للمندوب عند استلام الطلب</p>
+              </div>
+            </label>
+
+            <label :class="checkout.paymentMethod === 'vodafone_cash' ? 'border-terracotta bg-amber-50/40' : 'border-stoneBorder bg-white'"
+                   class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer">
+              <input type="radio" value="vodafone_cash" x-model="checkout.paymentMethod" class="accent-terracotta" />
+              <div>
+                <p class="text-xs font-bold text-ink">فودافون كاش</p>
+                <p class="text-[11px] text-inkMuted">حجز القطع ساعتين لحين التحويل</p>
+              </div>
+            </label>
+
+            <label :class="checkout.paymentMethod === 'instapay' ? 'border-terracotta bg-amber-50/40' : 'border-stoneBorder bg-white'"
+                   class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer">
+              <input type="radio" value="instapay" x-model="checkout.paymentMethod" class="accent-terracotta" />
+              <div>
+                <p class="text-xs font-bold text-ink">إنستاباي (InstaPay)</p>
+                <p class="text-[11px] text-inkMuted">تحويل فوري لحساب باندا</p>
+              </div>
+            </label>
+
+            <div class="flex items-center gap-3 p-3 rounded-xl border border-stoneBorder bg-stoneSoft/70 opacity-65">
+              <input type="radio" disabled />
+              <div>
+                <p class="text-xs font-bold text-ink">فيزا / ماستركارد (Paymob)</p>
+                <p class="text-[11px] text-terracotta font-semibold">قريباً في التحديث القادم</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Box -->
+        <div class="bg-stoneSoft rounded-2xl p-4 flex items-center justify-between border border-stoneBorder">
+          <div class="text-xs text-inkMuted">
+            <p>عدد القطع: <span class="font-bold text-ink" x-text="cartCount"></span></p>
+            <p>الشحن: <span class="font-bold text-ink" x-text="currentShippingFee === 0 ? 'مجاني' : formatPrice(currentShippingFee)"></span></p>
+          </div>
+          <div class="text-left">
+            <span class="text-xs text-inkMuted block">المطلوب سداده</span>
+            <span class="font-display text-xl font-extrabold text-terracotta" x-text="formatPrice(cartTotal)"></span>
+          </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-terracotta hover:bg-terracotta-dark text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors">
+          تأكيد الطلب وخصم المخزون
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Confirmation Modal (with Copy Buttons + 2h Reservation + Receipt Camera Upload) -->
+  <div x-show="confirmationOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/60 backdrop-blur-sm">
+    <div @click.away="confirmationOpen = false"
+         class="bg-linen rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stoneBorder max-h-[92vh] overflow-y-auto">
+      <template x-if="confirmedOrder">
+        <div>
+          <div class="w-12 h-12 rounded-full bg-olive-light text-olive flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+          </div>
+
+          <h3 class="font-display text-xl font-bold text-ink text-center">تم تسجيل طلبك بنجاح!</h3>
+          <p class="text-xs text-inkMuted text-center mt-1">تم خصم القطع من المخزون باسمك، وسيتم التواصل معك قريباً.</p>
+
+          <!-- Order Number & Total with Copy Buttons -->
+          <div class="mt-5 bg-white border border-stoneBorder rounded-2xl p-4 space-y-2.5 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-inkMuted">رقم الطلب:</span>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-ink" dir="ltr" x-text="confirmedOrder.orderNumber"></span>
+                <button @click="copyText(confirmedOrder.orderNumber, 'رقم الطلب')" class="text-[11px] bg-stoneSoft px-2 py-0.5 rounded font-semibold hover:bg-terracotta hover:text-white">نسخ</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-inkMuted">المبلغ الإجمالي:</span>
+              <div class="flex items-center gap-2">
+                <span class="font-display font-bold text-terracotta" x-text="formatPrice(confirmedOrder.total)"></span>
+                <button @click="copyText(confirmedOrder.total, 'المبلغ')" class="text-[11px] bg-stoneSoft px-2 py-0.5 rounded font-semibold hover:bg-terracotta hover:text-white">نسخ</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wallet / InstaPay Payment Instructions + 2-Hour Reservation -->
+          <div x-show="confirmedOrder.paymentMethod !== 'cod'" class="mt-4 bg-amber-50/70 border border-amber-200 rounded-2xl p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-ink">مهلة حجز المخزون للتحويل:</span>
+              <span class="font-display font-extrabold text-terracotta text-sm" dir="ltr" x-text="formattedCountdown"></span>
+            </div>
+
+            <div class="bg-white rounded-xl p-3 border border-amber-200 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-inkMuted block"
+                      x-text="confirmedOrder.paymentMethod === 'vodafone_cash' ? 'رقم محفظة فودافون كاش:' : 'عنوان حساب إنستاباي:'"></span>
+                <span class="font-display font-bold text-ink text-sm" dir="ltr"
+                      x-text="confirmedOrder.paymentMethod === 'vodafone_cash' ? '01098765432' : 'banda.store@instapay'"></span>
+              </div>
+              <button @click="copyText(confirmedOrder.paymentMethod === 'vodafone_cash' ? '01098765432' : 'banda.store@instapay', 'بيانات التحويل')"
+                      class="bg-terracotta text-white px-3 py-1.5 rounded-lg text-xs font-bold">نسخ</button>
+            </div>
+
+            <!-- Camera / File Receipt Upload -->
+            <div>
+              <label class="block font-bold text-ink mb-1.5">ارفق صورة إيصال التحويل (لتمديد الحجز لـ ١٢ ساعة):</label>
+              <label class="flex items-center justify-center gap-2 bg-white border border-dashed border-terracotta rounded-xl py-3 px-4 cursor-pointer hover:bg-amber-50 transition-colors">
+                <svg class="w-4 h-4 text-terracotta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                <span class="font-semibold text-terracotta" x-text="receiptUploaded ? 'تم إرفاق الإيصال بنجاح ✓' : 'التقاط صورة أو اختيار ملف الإيصال'"></span>
+                <input type="file" accept="image/*" capture="environment" @change="handleReceiptSelect($event)" class="hidden" />
+              </label>
+              <img x-show="receiptPreviewUrl" :src="receiptPreviewUrl" class="mt-2 h-28 w-full object-cover rounded-xl border border-stoneBorder" />
+            </div>
+          </div>
+
+          <div class="mt-6 flex gap-3">
+            <button @click="confirmationOpen = false; openTracking(confirmedOrder)"
+                    class="flex-1 bg-ink text-linen py-3 rounded-xl text-xs font-bold">
+              تتبع حالة الطلب
+            </button>
+            <button @click="confirmationOpen = false"
+                    class="flex-1 bg-stoneSoft text-ink border border-stoneBorder py-3 rounded-xl text-xs font-bold">
+              العودة للمتجر
+            </button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Order Tracking Modal -->
+  <div x-show="trackingOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-ink/60 backdrop-blur-sm">
+    <div @click.away="trackingOpen = false"
+         class="bg-linen rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-stoneBorder">
+      <div class="flex items-center justify-between pb-3 border-b border-stoneBorder mb-5">
+        <div>
+          <h3 class="font-display text-lg font-bold text-ink">تتبع طلبك</h3>
+          <p class="text-xs text-inkMuted">أدخل رقم الطلب ورقم الموبايل المسجل به</p>
+        </div>
+        <button @click="trackingOpen = false" class="w-8 h-8 rounded-full hover:bg-stoneSoft flex items-center justify-center text-inkMuted">✕</button>
+      </div>
+
+      <form @submit.prevent="searchOrder()" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input type="text" x-model="trackQuery.orderNumber" placeholder="BND-202611-0148" dir="ltr"
+                 class="bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-terracotta" />
+          <input type="tel" x-model="trackQuery.phone" placeholder="01012345678" dir="ltr"
+                 class="bg-white border border-stoneBorder rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-terracotta" />
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="submit" class="flex-1 bg-terracotta text-white py-2.5 rounded-xl text-xs font-bold">بحث عن الطلب</button>
+          <button type="button" @click="fillSampleTrack()" class="bg-stoneSoft border border-stoneBorder text-ink px-3 py-2.5 rounded-xl text-xs font-semibold">
+            تجربة سريعة
+          </button>
+        </div>
+      </form>
+
+      <p x-show="trackError" class="mt-3 text-xs text-red-700 font-semibold" x-text="trackError"></p>
+
+      <template x-if="trackedOrder">
+        <div class="mt-5 bg-white border border-stoneBorder rounded-2xl p-4 space-y-4">
+          <div class="flex items-center justify-between text-xs border-b border-stoneBorder pb-3">
+            <div>
+              <p class="font-display font-bold text-ink" x-text="trackedOrder.orderNumber"></p>
+              <p class="text-inkMuted" x-text="trackedOrder.customerName + ' • ' + trackedOrder.governorate"></p>
+            </div>
+            <span class="bg-olive-light text-olive font-bold px-3 py-1 rounded-full" x-text="statusLabel(trackedOrder.status)"></span>
+          </div>
+
+          <!-- Progress Steps -->
+          <div class="grid grid-cols-4 gap-2 text-center text-[11px]">
+            <div :class="statusStepIndex(trackedOrder.status) >= 1 ? 'text-olive font-bold' : 'text-stone-400'">
+              <div :class="statusStepIndex(trackedOrder.status) >= 1 ? 'bg-olive text-white' : 'bg-stoneSoft'" class="w-7 h-7 rounded-full mx-auto flex items-center justify-center mb-1">1</div>
+              طلب جديد
+            </div>
+            <div :class="statusStepIndex(trackedOrder.status) >= 2 ? 'text-olive font-bold' : 'text-stone-400'">
+              <div :class="statusStepIndex(trackedOrder.status) >= 2 ? 'bg-olive text-white' : 'bg-stoneSoft'" class="w-7 h-7 rounded-full mx-auto flex items-center justify-center mb-1">2</div>
+              التجهيز
+            </div>
+            <div :class="statusStepIndex(trackedOrder.status) >= 3 ? 'text-olive font-bold' : 'text-stone-400'">
+              <div :class="statusStepIndex(trackedOrder.status) >= 3 ? 'bg-olive text-white' : 'bg-stoneSoft'" class="w-7 h-7 rounded-full mx-auto flex items-center justify-center mb-1">3</div>
+              تم الشحن
+            </div>
+            <div :class="statusStepIndex(trackedOrder.status) >= 4 ? 'text-olive font-bold' : 'text-stone-400'">
+              <div :class="statusStepIndex(trackedOrder.status) >= 4 ? 'bg-olive text-white' : 'bg-stoneSoft'" class="w-7 h-7 rounded-full mx-auto flex items-center justify-center mb-1">4</div>
+              اتسلم
+            </div>
+          </div>
+
+          <div class="text-xs border-t border-stoneBorder pt-3 flex justify-between font-bold">
+            <span>الإجمالي</span>
+            <span class="text-terracotta" x-text="formatPrice(trackedOrder.total)"></span>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+</body>
+</html>
+
